@@ -1,2 +1,3 @@
 # hackerrank-scraper
-Scraping leaderboards from HackerRank
+1. Set COOKIE variable to your HackerRank cookie
+2. `ruby scrape.rb`
