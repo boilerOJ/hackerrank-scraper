@@ -7,7 +7,7 @@ require 'json'
 contests = [ ]
 
 HACKERRANK_URL = "https://www.hackerrank.com/rest/contests"
-COOKIE = "not committing this lol"
+COOKIE = "not commiting this lol"
 
 (1..9).each do |i|
   contests << "purdue-competitive-programming-week-#{i}"
@@ -38,19 +38,23 @@ def get_challenge_leaderboard(contest_name, challenge_name, offset = 0, limit = 
   get_json(url)
 end
 
-def get_all_challenge_names(contest_list)
+def get_all_challenge_info(contest_list)
   challenge_list = {}
   contest_list.each do |contest|
     challenge_list[contest] = []
   end
   contest_list.each do |contest|
     challenges = get_challenges contest
-    challenges.each do |ch|
-      challenge_list[contest] << ch['slug']
+    challenges.each do |challenge|
+      challenge_list[contest] << {
+        slug: challenge['slug'],
+        name: challenge['name'],
+        leaderboard: get_challenge_leaderboard(contest, challenge['slug'])
+      }
     end
   end
   challenge_list
 end
 
-puts get_all_challenge_names(contests)
+puts get_all_challenge_info(contests)
 
