@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'set'
-require 'rubygems'
 require 'open-uri'
 require 'json'
 
@@ -100,4 +99,7 @@ def generate_score_numbers(contest_list)
 end
 
 scores = generate_score_numbers(contests)
-print scores.sort_by {|user, count| count}
+scores2 = scores.sort_by {|user, count| count}
+scores2.each do |user, count|
+  puts "#{user}: #{count}"
+end
