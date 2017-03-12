@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'set'
 require 'rubygems'
 require 'open-uri'
 require 'json'
@@ -56,5 +57,47 @@ def get_all_challenge_info(contest_list)
   challenge_list
 end
 
-puts get_all_challenge_info(contests)
+def get_all_challengers(contest_list)
+  challengers = Set.new
+  contest_list.each do |contest|
+    leaderboard = get_leaderboard contest
+    leaderboard.each do |user|
+      challengers << user['hacker']
+    end
+  end
+  return challengers.to_a
+end
 
+def generate_scores(contest_list)
+  scoreboard = Hash.new()
+  data = get_all_challenge_info contest_list
+  users = get_all_challengers contest_list
+  data.each do |contest_slug, contest|
+    contest.each do |challenge|
+      leaderboard = challenge[:leaderboard]
+      leaderboard.each do |challenger|
+        hacker = challenger['hacker']
+        if !scoreboard.key?(hacker) then
+          scoreboard[hacker] = {
+            'completed' => []
+          }
+        end
+        scoreboard[hacker]['completed'] << challenge[:slug]
+      end
+    end
+  end
+
+  scoreboard
+end
+
+def generate_score_numbers(contest_list)
+  scoreboard = Hash.new()
+  scores = generate_scores(contest_list)
+  scores.each do |user, scores|
+    scoreboard[user] = scores['completed'].length
+  end
+  scoreboard
+end
+
+scores = generate_score_numbers(contests)
+print scores.sort_by {|user, count| count}
