@@ -64,7 +64,7 @@ def get_all_challengers(contest_list)
       challengers << user['hacker']
     end
   end
-  return challengers.to_a
+  challengers.to_a
 end
 
 def generate_scores(contest_list)
@@ -85,7 +85,6 @@ def generate_scores(contest_list)
       end
     end
   end
-
   scoreboard
 end
 
